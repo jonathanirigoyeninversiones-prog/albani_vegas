@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel Administrativo</title>
+    <title>zzz Panel Administrativo</title>
     <style>
         body { font-family: sans-serif; padding: 20px; }
         #login-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh; }
@@ -57,16 +57,10 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, doc, deleteDoc, addDoc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
-        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app-check.js";
         
         const app = initializeApp({apiKey: "AIzaSyCqTluO4X3TScWCi1MuVaCh3_95H1S-EPw", authDomain: "albany-vegas.firebaseapp.com", projectId: "albany-vegas", storageBucket: "albany-vegas.firebasestorage.app", messagingSenderId: "733658747319", appId: "1:733658747319:web:189e5aaaf73beec19f9832"});
         const db = getFirestore(app);
 
-        initializeAppCheck(app, {
-            provider: new ReCaptchaV3Provider('6LcipFktAAAAAGtmXfrFXlnxU1wctu4eppax0Dij'),
-            isTokenAutoRefreshEnabled: true
-        });
-        
         window.agregarCategoria = async () => { const nombre = prompt("Nombre de la categoría:"); if(nombre) await addDoc(collection(db, "categorias"), {nombre}); cargarDatos(); };
         window.agregarServicio = async (cat) => { const nombre = prompt("Nombre del servicio:"); if(nombre) await addDoc(collection(db, "servicios"), {nombre, categoria: cat}); cargarDatos(); };
         window.modificarCategoria = async (id, nombre) => { const nuevo = prompt("Nuevo nombre:", nombre); if(nuevo) await updateDoc(doc(db, "categorias", id), {nombre: nuevo}); cargarDatos(); };
@@ -76,7 +70,15 @@
 
         let citasLocales = [], citasCompletadas = [], config = {};
         window.mostrarTab = (id) => { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.getElementById(id).classList.add('active'); };
-        window.guardarConfig = async (docId, inputId, campo) => { const valor = document.getElementById(inputId).value; await setDoc(doc(db, "configuracion", docId), { [campo]: valor }, { merge: true }); alert("Guardado"); cargarDatos(); };
+        
+        // Función corregida para asegurar el guardado
+        window.guardarConfig = async (docId, inputId, campo) => { 
+            const valor = document.getElementById(inputId).value; 
+            await setDoc(doc(db, "configuracion", docId), { [campo]: valor }, { merge: true }); 
+            alert("Guardado exitosamente"); 
+            cargarDatos(); 
+        };
+
         window.guardarHorario = async (dia) => { const apertura = document.getElementById(`apertura-${dia}`).value, cierre = document.getElementById(`cierre-${dia}`).value, limite = document.getElementById(`lim-${dia}`).value; await setDoc(doc(db, "configuracion", dia), { apertura, cierre, limite: parseInt(limite) }, { merge: true }); alert("Guardado"); };
         window.toggleDia = async (dia) => { const docRef = doc(db, "configuracion", dia); const snap = await getDoc(docRef); const nuevoEstado = snap.exists() ? !snap.data().abierto : true; await setDoc(docRef, { abierto: nuevoEstado }, { merge: true }); cargarDatos(); };
         window.confirmarCita = async (id, estadoActual) => { await updateDoc(doc(db, "citas", id), { confirmado: !estadoActual }); cargarDatos(); };
@@ -112,8 +114,9 @@
             citasLocales = []; citasCompletadas = [];
             const divCat = document.getElementById('lista-categorias'), divHor = document.getElementById('lista-horarios');
             divCat.innerHTML = ""; divHor.innerHTML = "";
-            const snapV = await getDoc(doc(db, "configuracion", "vip")), snapS = await getDoc(doc(db, "configuracion", "svip"));
-            config = { vip: snapV.exists() ? snapV.data().limite : null, svip: snapS.exists() ? snapS.data().limite : null };
+            const snapWpp = await getDoc(doc(db, "configuracion", "whatsapp")), snapV = await getDoc(doc(db, "configuracion", "vip")), snapS = await getDoc(doc(db, "configuracion", "svip"));
+            config = { wpp: snapWpp.exists() ? snapWpp.data().numero : "", vip: snapV.exists() ? snapV.data().limite : null, svip: snapS.exists() ? snapS.data().limite : null };
+            document.getElementById('input-wpp').value = config.wpp;
             document.getElementById('input-vip').value = config.vip || "";
             document.getElementById('input-svip').value = config.svip || "";
             const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
@@ -127,7 +130,7 @@
             const cats = await getDocs(collection(db, "categorias")), servs = await getDocs(collection(db, "servicios"));
             cats.forEach(cat => { let catNombre = cat.data().nombre, html = `<div class="cat-box"><div class="cat-header"><strong>${catNombre}</strong><div><button onclick="agregarServicio('${catNombre}')">+ Agregar Servicio</button><button onclick="modificarCategoria('${cat.id}', '${catNombre}')">Editar</button><button onclick="eliminarCategoria('${cat.id}')">Eliminar</button></div></div>`; servs.forEach(s => { if (s.data().categoria === catNombre) { html += `<div class="sub-item"><span>${s.data().nombre}</span><div><button onclick="modificarServicio('${s.id}')">Editar</button><button onclick="eliminarServicio('${s.id}')">Eliminar</button></div></div>`; } }); divCat.innerHTML += html + `</div>`; });
         };
-        document.getElementById('btn-entrar').addEventListener('click', async () => { try { await signInWithEmailAndPassword(getAuth(), document.getElementById('user').value, document.getElementById('pass').value); document.getElementById('login-box').style.display = 'none'; document.getElementById('admin-panel').style.display = 'block'; cargarDatos(); } catch (e) { alert("Error"); } });
+        document.getElementById('btn-entrar').addEventListener('click', async () => { try { await signInWithEmailAndPassword(getAuth(), document.getElementById('user').value, document.getElementById('pass').value); document.getElementById('login-box').style.display = 'none'; document.getElementById('admin-panel').style.display = 'block'; cargarDatos(); } catch (e) { alert("Error al entrar"); } });
     </script>
 </body>
 </html>
