@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>zzz Reserva de Citas - Salon Beauty</title>
+    <title>Reserva de Citas - Salon Beauty</title>
     <style>
         body { background-image: url('https://jonathanirigoyeninversiones-prog.github.io/albani_vegas/logo_albani_vegas.jpeg'); background-size: contain; background-repeat: no-repeat; background-position: center; min-height: 100vh; margin: 0; font-family: sans-serif; }
         .container { background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 15px; max-width: 600px; margin: 40px auto; }
@@ -38,15 +38,9 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
         import { getFirestore, doc, getDoc, collection, getDocs, addDoc, query, where } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
-        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app-check.js";
         
         const app = initializeApp({apiKey: "AIzaSyCqTluO4X3TScWCi1MuVaCh3_95H1S-EPw", authDomain: "albany-vegas.firebaseapp.com", projectId: "albany-vegas", storageBucket: "albany-vegas.firebasestorage.app", messagingSenderId: "733658747319", appId: "1:733658747319:web:189e5aaaf73beec19f9832"});
         const db = getFirestore(app);
-
-        initializeAppCheck(app, {
-            provider: new ReCaptchaV3Provider('6LcipFktAAAAAGtmXfrFXlnxU1wctu4eppax0Dij'),
-            isTokenAutoRefreshEnabled: true
-        });
 
         document.getElementById('fecha-cita').setAttribute('min', new Date().toISOString().split('T')[0]);
         window.validarDia = async () => {
