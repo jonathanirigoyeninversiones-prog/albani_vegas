@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reserva de Citas - Uñas Albani Vega</title>
+    <title>R11 eserva de Citas - Uñas Albani Vega</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -41,10 +41,9 @@
             border-radius: var(--radius);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
             padding: 35px 30px;
-            transition: all 0.3s ease;
         }
 
-        /* Contenedor del Logotipo Principal */
+        /* Estilo y aseguramiento del Logo */
         .logo-container {
             text-align: center;
             margin-bottom: 20px;
@@ -57,6 +56,7 @@
             border-radius: 50%;
             box-shadow: 0 8px 20px rgba(212, 163, 115, 0.25);
             border: 2px solid #fff;
+            display: inline-block;
         }
 
         h1 {
@@ -68,7 +68,7 @@
             letter-spacing: -0.5px;
         }
 
-        /* Estilización moderna de formularios e inputs (respetando lógica original) */
+        /* Campos y formulario con diseño moderno pero IDs originales intactos */
         form {
             display: flex;
             flex-direction: column;
@@ -113,32 +113,13 @@
             transition: background-color 0.2s, transform 0.1s;
             margin-top: 10px;
             box-shadow: 0 4px 12px rgba(212, 163, 115, 0.3);
+            width: 100%;
         }
 
         button[type="submit"]:hover {
             background-color: var(--primary-hover);
         }
 
-        button[type="submit"]:active {
-            transform: scale(0.98);
-        }
-
-        /* Estilo elegante para Modales o Alertas nativas de éxito */
-        .modal-success {
-            text-align: center;
-            padding: 20px 10px;
-        }
-
-        .modal-success img {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin-bottom: 15px;
-            border: 2px solid var(--primary-color);
-        }
-
-        /* Asegurando adaptabilidad perfecta en celulares */
         @media (max-width: 480px) {
             .container {
                 padding: 25px 20px;
@@ -150,7 +131,7 @@
 
     <div class="container">
         <div class="logo-container">
-            <img src="image_27dfc1.jpg" alt="Uñas Albani Vega Logo">
+            <img src="image_27dfc1.jpg" alt="Uñas Albani Vega Logo" onerror="this.style.display='none'">
         </div>
 
         <h1>Reserva tu cita</h1>
@@ -168,24 +149,21 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="telefono">Teléfono / WhatsApp</label>
-                    <input type="tel" id="telefono" required placeholder="+58 ...">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" required placeholder="Tu número de teléfono">
                 </div>
 
                 <div class="form-group">
                     <label for="servicio">Servicio</label>
                     <select id="servicio" required>
                         <option value="" disabled selected>Selecciona un servicio</option>
-                        </select>
+                    </select>
                 </div>
 
-                <button type="submit">Solicitar Cita</button>
+                <button type="submit" id="btnEnviar">Solicitar Cita</button>
             </form>
         </div>
     </div>
 
-    <script>
-        // Lógica original de tu repositorio se preserva aquí abajo intacta
-    </script>
 </body>
 </html>
